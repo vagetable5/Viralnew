@@ -2,7 +2,7 @@
 # অথবা New > Static Site বানিয়ে Publish directory = site দিন (তখন নিচের headers Dashboard > Headers এ হাতে বসাতে হবে)।
 services:
   - type: web
-    name: viral-video
+    name: viralvideo18
     runtime: static
     staticPublishPath: ./site
     headers:
