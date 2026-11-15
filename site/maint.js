@@ -121,3 +121,17 @@ window.imgOpt = function (u, w) {
   if (u.indexOf(k) < 0 || u.indexOf(m) < 0 || u.indexOf('/image/upload/f_auto') >= 0) return u;
   return u.replace(m, m + 'f_auto,q_auto,c_limit,w_' + (w || 600) + '/');
 };
+
+// ---- ছোট ক্যাশ (localStorage): একই ভিজিটর পেজ বদলালে Supabase থেকে বারবার সেটিংস/এড নামে না → ব্যান্ডউইথ বাঁচে ----
+// bad(d) true দিলে ক্যাশ ব্যবহার হয় না (যেমন রক্ষণাবেক্ষণ মোড চালু থাকলে সবসময় নতুন আনে)।
+window.cachedGet = async function (key, ttl, fetcher, bad) {
+  try {
+    var c = JSON.parse(localStorage.getItem(key) || 'null');
+    if (c && Date.now() - c.t < ttl && !(bad && bad(c.d))) return c.d;
+  } catch (e) {}
+  var d = null;
+  try { d = await fetcher(); } catch (e) {}
+  if (d != null) { try { localStorage.setItem(key, JSON.stringify({ t: Date.now(), d: d })); } catch (e) {} }
+  return d;
+};
+window.clearSiteCache = function () { try { ['vvS', 'vvA'].forEach(function (k) { localStorage.removeItem(k); }); } catch (e) {} };
