@@ -117,6 +117,8 @@ window.maintGate = function (S, prof) {
 // ---- Cloudinary ছবি অপটিমাইজার: শুধু Cloudinary লিংকে ছোট সাইজ/WebP/AVIF অনুরোধ করে, অন্য লিংক অপরিবর্তিত ----
 window.imgOpt = function (u, w) {
   u = String(u == null ? '' : u);
+  // ছবির বট (imgbot) এর ছবি /img/<id>: ছোট সাইজ চাইলে ?s=1
+  if (/\/img\/\d+$/.test(u)) return (w || 600) <= 700 ? u + '?s=1' : u;
   var k = '://res.cloudinary.com/', m = '/image/upload/';
   if (u.indexOf(k) < 0 || u.indexOf(m) < 0 || u.indexOf('/image/upload/f_auto') >= 0) return u;
   return u.replace(m, m + 'f_auto,q_auto,c_limit,w_' + (w || 600) + '/');
